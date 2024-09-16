@@ -1,67 +1,66 @@
-import Link from "next/link";
+"use client";
+import { useEffect, useState } from "react";
 
-import { LatestPost } from "~/app/_components/post";
-import { getServerAuthSession } from "~/server/auth";
-import { api, HydrateClient } from "~/trpc/server";
+type Countdown = {
+  date: Date;
+  name: string;
+};
 
-export default async function Home() {
-  const hello = await api.post.hello({ text: "from tRPC" });
-  const session = await getServerAuthSession();
+export default function Home() {
+  const pickUpPiaDate = new Date("2024-09-16 17:30:00");
+  const thanksgivingDate = new Date("2024-11-25");
 
-  void api.post.getLatest.prefetch();
+  const dates = [
+    { date: pickUpPiaDate, name: "Pia Volleyball" },
+    { date: thanksgivingDate, name: "Thanksgiving" },
+  ]
+
+
+  // countdown 
+  const [countdowns, setCountdowns] = useState<Countdown[]>();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const countdowns = dates.map((date) => {
+        const now = new Date();
+        const distance = date.date.getTime() - now.getTime();
+        return { date: new Date(distance), name: date.name };
+      })
+      setCountdowns(countdowns);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Convert countdown from milliseconds to a human-readable format
+  const formatCountdown = (milliseconds: number) => {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const seconds = totalSeconds % 60;
+    const totalMinutes = Math.floor(totalSeconds / 60);
+    const minutes = totalMinutes % 60;
+    const totalHours = Math.floor(totalMinutes / 60);
+    const hours = totalHours % 24;
+    const days = Math.floor(totalHours / 24);
+
+    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  };
 
   return (
-    <HydrateClient>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-            Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-          </h1>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-            <Link
+    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
+        <div className="flex flex-col gap-4 sm:grid-cols-2 md:gap-8">
+          {countdowns?.map((countdown) => (
+            <div
               className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-              href="https://create.t3.gg/en/usage/first-steps"
-              target="_blank"
             >
-              <h3 className="text-2xl font-bold">First Steps →</h3>
+              <h3 className="text-2xl font-bold">{countdown.name}</h3>
               <div className="text-lg">
-                Just the basics - Everything you need to know to set up your
-                database and authentication.
+                {formatCountdown(countdown.date.getTime())}
               </div>
-            </Link>
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-              href="https://create.t3.gg/en/introduction"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">Documentation →</h3>
-              <div className="text-lg">
-                Learn more about Create T3 App, the libraries it uses, and how
-                to deploy it.
-              </div>
-            </Link>
-          </div>
-          <div className="flex flex-col items-center gap-2">
-            <p className="text-2xl text-white">
-              {hello ? hello.greeting : "Loading tRPC query..."}
-            </p>
-
-            <div className="flex flex-col items-center justify-center gap-4">
-              <p className="text-center text-2xl text-white">
-                {session && <span>Logged in as {session.user?.name}</span>}
-              </p>
-              <Link
-                href={session ? "/api/auth/signout" : "/api/auth/signin"}
-                className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-              >
-                {session ? "Sign out" : "Sign in"}
-              </Link>
             </div>
-          </div>
-
-          {session?.user && <LatestPost />}
+          ))}
         </div>
-      </main>
-    </HydrateClient>
+      </div>
+    </main>
   );
 }
