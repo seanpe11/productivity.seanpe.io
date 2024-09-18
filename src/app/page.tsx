@@ -26,7 +26,7 @@ export default function Home() {
         return { date: new Date(distance), name };
       });
       setCountdowns(updatedCountdowns);
-    }, 10); // Update every second
+    }, 1); // Update every second
 
     return () => clearInterval(interval); // Cleanup the interval on component unmount
   }, [deadlines]); // Depend on deadlines, so it runs when deadlines are available
