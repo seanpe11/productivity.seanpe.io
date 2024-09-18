@@ -6,6 +6,7 @@ I figured that a simple productivity app would be a good way to practice my skil
 Basically the t3 stack, just adding PWA support so I can also use it offline and on my phone.
 
 # TODO:
-- [ ] Connect to my db
+- [x] Connect to my db
+- [ ] PWA configuration
 - [ ] Add a pomodoro timer
 - [ ] Timer can be reinterpreted
