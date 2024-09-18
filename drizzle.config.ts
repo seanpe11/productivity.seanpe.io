@@ -8,5 +8,5 @@ export default {
   dbCredentials: {
     url: env.DATABASE_URL,
   },
-  tablesFilter: ["productivity-seanpe-com_*"],
+  tablesFilter: ["productivity-seanpe-com_*"]
 } satisfies Config;

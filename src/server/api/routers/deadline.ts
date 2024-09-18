@@ -8,10 +8,9 @@ import {
 import { deadlines } from "~/server/db/schema";
 
 export const deadlineRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    const deadline = await ctx.db.query.deadlines.findMany({
+  getAll: publicProcedure.query(({ ctx }) => {
+    return ctx.db.query.deadlines.findMany({
     });
 
-    return deadline ?? null;
   }),
 });

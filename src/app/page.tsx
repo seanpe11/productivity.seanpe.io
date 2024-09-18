@@ -9,35 +9,27 @@ type Countdown = {
 };
 
 export default function Home() {
-  const pickUpPiaDate = new Date("2024-09-18 17:30:00");
-  const thanksgivingDate = new Date("2024-11-25");
+  const deadlines = api.deadline.getAll.useQuery().data;
 
-  const deadlines = api.deadline.getAll.useQuery();
-  console.log(deadlines);
-
-  const dates = [
-    { date: pickUpPiaDate, name: "Pia Volleyball" },
-    { date: thanksgivingDate, name: "Thanksgiving" },
-  ]
-
-
-  // countdown 
-  const [countdowns, setCountdowns] = useState<Countdown[]>();
+  // Countdown state
+  const [countdowns, setCountdowns] = useState<Countdown[]>([]);
   const modes = ["default", "pomodoro", "week", "month"];
   const [modeIndex, setModeIndex] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const countdowns = dates.map((date) => {
-        const now = new Date();
-        const distance = date.date.getTime() - now.getTime();
-        return { date: new Date(distance), name: date.name };
-      })
-      setCountdowns(countdowns);
-    }, 1); // update every second
+    if (!deadlines) return; // Ensure deadlines are loaded before setting the interval THIS WAS IMPORTANT
 
-    return () => clearInterval(interval);
-  }, []);
+    const interval = setInterval(() => {
+      const now = new Date();
+      const updatedCountdowns = deadlines.map(({ deadline, name }) => {
+        const distance = new Date(deadline).getTime() - now.getTime();
+        return { date: new Date(distance), name };
+      });
+      setCountdowns(updatedCountdowns);
+    }, 1000); // Update every second
+
+    return () => clearInterval(interval); // Cleanup the interval on component unmount
+  }, [deadlines]); // Depend on deadlines, so it runs when deadlines are available
 
   // Convert countdown from milliseconds to a human-readable format
   const formatCountdown = (milliseconds: number) => {
@@ -57,18 +49,19 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
         <div className="flex flex-col gap-4 sm:grid-cols-2 md:gap-8 w-full">
-          {countdowns?.map((countdown, index) => (
-            <div
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-              key={index + countdown.name}
-              onClick={() => setModeIndex((modeIndex + 1) % modes.length)}
-            >
-              <h3 className="text-2xl font-bold">{countdown.name}</h3>
-              <div className="text-lg">
-                {formatCountdown(countdown.date.getTime())}
+          {countdowns.length > 0 &&
+            countdowns.map((countdown, index) => (
+              <div
+                className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
+                key={index + countdown.name}
+                onClick={() => setModeIndex((modeIndex + 1) % modes.length)}
+              >
+                <h3 className="text-2xl font-bold">{countdown.name}</h3>
+                <div className="text-lg">
+                  {formatCountdown(countdown.date.getTime())}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
     </main>
