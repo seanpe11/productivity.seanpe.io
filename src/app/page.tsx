@@ -26,10 +26,11 @@ export default function Home() {
         return { date: new Date(distance), name };
       });
       setCountdowns(updatedCountdowns);
-    }, 1000); // Update every second
+    }, 10); // Update every second
 
     return () => clearInterval(interval); // Cleanup the interval on component unmount
   }, [deadlines]); // Depend on deadlines, so it runs when deadlines are available
+
 
   // Convert countdown from milliseconds to a human-readable format
   const formatCountdown = (milliseconds: number) => {
