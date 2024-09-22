@@ -1,10 +1,9 @@
 import { relations, sql } from "drizzle-orm";
 import {
-  index,
   integer,
-  pgTableCreator,
   primaryKey,
-  serial,
+  pgTableCreator,
+  index,
   text,
   timestamp,
   varchar,
@@ -20,9 +19,7 @@ import { type AdapterAccount } from "next-auth/adapters";
  */
 export const createTable = pgTableCreator((name) => `productivity-seanpe-com_${name}`);
 
-
 export const deadlines = createTable("deadline", {
-  id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   deadline: timestamp("deadline", { withTimezone: true }).notNull(),
   completed: boolean("completed").notNull(),
@@ -33,6 +30,8 @@ export const deadlines = createTable("deadline", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
     () => new Date()
   ),
+}, (table) => {
+  return { pk: primaryKey({ columns: [table.name, table.deadline] }) }
 });
 
 export const users = createTable("user", {

@@ -11,6 +11,5 @@ export const deadlineRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.db.query.deadlines.findMany({
     });
-
   }),
 });
