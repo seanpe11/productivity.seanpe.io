@@ -17,7 +17,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <div className="bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+          <TRPCReactProvider>{children}</TRPCReactProvider>
+        </div>
       </body>
     </html>
   );
