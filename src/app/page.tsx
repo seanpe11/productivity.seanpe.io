@@ -50,12 +50,15 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
+        <div>
+          Deadlines
+        </div>
         {isLoading ? <PuffLoader color="white" loading={isLoading} /> :
-          <div className="flex flex-col gap-4 sm:grid-cols-2 md:gap-8 w-full">
+          <div className="flex flex-col w-full rounded-xl bg-white/10">
             {countdowns.length > 0 &&
               countdowns.map((countdown, index) => (
                 <div
-                  className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
+                  className={`flex flex-col gap-4 p-4 hover:bg-white/20 ${(index < countdowns.length - 1) ? "border-b" : ""}`}
                   key={index + countdown.name}
                   onClick={() => setModeIndex((modeIndex + 1) % modes.length)}
                 >

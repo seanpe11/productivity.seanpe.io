@@ -17,8 +17,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
-        <div className="bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-          <TRPCReactProvider>{children}</TRPCReactProvider>
+        <div className="flex items-center justify-center h-screen bg-[#071c39] relative overflow-hidden">
+          {/* Gradient Background */}
+          <div className="absolute w-[750px] h-[750px] blur-[calc(750px/5)] bg-gradient-to-br from-[hsl(222,84%,60%)] to-[hsl(164,79%,71%)] rounded-[30%_70%_70%_30%/30%_30%_70%_70%] animate-[rotate_50s_cubic-bezier(0.8,0.2,0.2,0.8)_infinite]"></div>
+
+          {/* Content */}
+          <div className="relative z-10 text-white">
+            <TRPCReactProvider>{children}</TRPCReactProvider>
+          </div>
         </div>
       </body>
     </html>
