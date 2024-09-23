@@ -8,6 +8,8 @@ import {
   timestamp,
   varchar,
   boolean,
+  decimal,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -33,6 +35,32 @@ export const deadlines = createTable("deadline", {
 }, (table) => {
   return { pk: primaryKey({ columns: [table.name, table.deadline] }) }
 });
+
+export const goalTypeEnum = pgEnum('goalType', ['daily', 'weekly', 'monthly', 'yearly', 'deadline', 'target']);
+export const goals = createTable("goals", {
+  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  progress: decimal("progress", { precision: 10, scale: 2 }).notNull().default("0.00"),
+  unitOfMeasure: varchar("unit_of_measure", { length: 255 }).notNull(),
+  goalType: goalTypeEnum("goal_type").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  targetCompletionDate: timestamp("target_completion_date", { withTimezone: true }),
+})
+
+export const goalProgress = createTable("goal_progress", {
+  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  goalId: varchar("goal_id", { length: 255 }).notNull().references(() => goals.id),
+  progress: decimal("progress", { precision: 10, scale: 2 }).notNull().default("0.00"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+})
+
+export const goalProgressRelations = relations(goalProgress, ({ one }) => ({
+  goal: one(goals, { fields: [goalProgress.goalId], references: [goals.id] }),
+}));
 
 export const users = createTable("user", {
   id: varchar("id", { length: 255 })
