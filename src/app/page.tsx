@@ -50,7 +50,7 @@ export default function Home() {
         </div>
         {deadlines === undefined ? <PuffLoader color="white" loading={true} /> : null}
         <CountdownList deadlines={
-          deadlines?.map(({ deadline, name }) => ({ date: new Date(deadline), name }))
+          deadlines?.map(({ deadline, name, createdAt }) => ({ date: new Date(deadline), name, createdAt }))
         } /> {/* Pass deadlines directly */}
       </div>
       {showAddModal && <AddModal />}
