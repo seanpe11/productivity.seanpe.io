@@ -47,7 +47,6 @@ const CountdownList: React.FC<CountdownListProps> = ({ deadlines, onDelete }) =>
 			}
 		};
 	}, [deadlines]);
-	console.log(countdowns);
 
 	const formatCountdown = (milliseconds: number) => {
 		switch (modes[modeIndex]) {
@@ -62,7 +61,6 @@ const CountdownList: React.FC<CountdownListProps> = ({ deadlines, onDelete }) =>
 		}
 	};
 
-	// TODO: fix logic
 	const getProgress = (countdown: Countdown) => {
 		const now = new Date().getTime();
 		const totalDistance = countdown.deadline.getTime() - countdown.startTime.getTime();
@@ -85,8 +83,7 @@ const CountdownList: React.FC<CountdownListProps> = ({ deadlines, onDelete }) =>
 									{formatCountdown(countdown.remainingTime.getTime())}
 								</div>
 							</div>
-							{/* TODO: fix logic */}
-							<button onClick={() => onDelete(countdown.name, countdown.remainingTime)}>Delete</button>
+							<button onClick={() => onDelete(countdown.name, countdown.deadline)}>Delete</button>
 						</div>
 						<Progress value={getProgress(countdown)} />
 					</div>
