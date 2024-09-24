@@ -5,15 +5,11 @@ import { PuffLoader } from "react-spinners";
 import CountdownList from "~/components/CountdownList";
 import DateTimePicker from "~/components/DateTimePicker";
 
-type Countdown = {
-  date: Date;
-  name: string;
-};
-
 export default function Home() {
   const { data: deadlines } = api.deadline.getAll.useQuery();
   const { mutate: createDeadline } = api.deadline.create.useMutation();
   const { mutate: deleteDeadline } = api.deadline.delete.useMutation();
+  console.log(deadlines);
 
   const handleCreate = (name: string, deadline: Date) => {
     createDeadline({ name, deadline });
@@ -61,9 +57,7 @@ export default function Home() {
         </div>
         {deadlines === undefined ? <PuffLoader color="white" loading={true} /> : null}
         {/* TODO: check delete logic */}
-        <CountdownList deadlines={
-          deadlines?.map(({ deadline, name, createdAt }) => ({ date: new Date(deadline), name, createdAt }))
-        }
+        <CountdownList deadlines={deadlines}
           onDelete={handleDelete}
         />
       </div>

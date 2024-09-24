@@ -1,4 +1,4 @@
-import { relations, sql } from "drizzle-orm";
+import { InferModel, InferSelectModel, relations, sql } from "drizzle-orm";
 import {
   integer,
   primaryKey,
@@ -26,6 +26,7 @@ export const deadlines = createTable("deadline", {
   deadline: timestamp("deadline", { withTimezone: true }).notNull(),
   completed: boolean("completed").notNull(),
   remarks: text("remarks"),
+  startTime: timestamp("start_time", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
@@ -150,3 +151,6 @@ export const verificationTokens = createTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 );
+
+
+export type SelectDeadlines = InferSelectModel<typeof deadlines>;

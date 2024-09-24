@@ -1,17 +1,21 @@
 "use client";
 import { useState, useEffect, useRef } from 'react';
 import * as deadlineFormatters from '~/util/deadlineFormatters';
-
-type Countdown = {
-	date: Date;
-	name: string;
-	createdAt?: Date;
-};
+import { SelectDeadlines } from "~/server/db/schema";
+import { Progress } from "~/components/ui/progress";
 
 interface CountdownListProps {
-	deadlines: Countdown[] | undefined; // Directly pass the deadlines data from useQuery
+	deadlines: SelectDeadlines[] | undefined; // Directly pass the deadlines data from useQuery
 	onDelete: (name: string, deadline: Date) => void;
 }
+
+// frontend type that holds calculated distance from deadline
+type Countdown = {
+	remainingTime: Date;
+	name: string;
+	startTime: Date;
+	deadline: Date;
+};
 
 const CountdownList: React.FC<CountdownListProps> = ({ deadlines, onDelete }) => {
 	const [countdowns, setCountdowns] = useState<Countdown[]>([]);
@@ -24,9 +28,10 @@ const CountdownList: React.FC<CountdownListProps> = ({ deadlines, onDelete }) =>
 
 		const updateCountdowns = () => {
 			const now = new Date().getTime();
-			const updatedCountdowns = deadlines.map(({ date, name }) => {
-				const distance = new Date(date).getTime() - now;
-				return { date: new Date(distance), name };
+			const updatedCountdowns = deadlines.map(({ deadline, name, startTime, createdAt }) => {
+				const distance = new Date(deadline).getTime() - now;
+				if (startTime !== null) return { remainingTime: new Date(distance), name, startTime, deadline };
+				return { remainingTime: new Date(distance), name, startTime: createdAt, deadline };
 			});
 
 			setCountdowns(updatedCountdowns);
@@ -42,6 +47,7 @@ const CountdownList: React.FC<CountdownListProps> = ({ deadlines, onDelete }) =>
 			}
 		};
 	}, [deadlines]);
+	console.log(countdowns);
 
 	const formatCountdown = (milliseconds: number) => {
 		switch (modes[modeIndex]) {
@@ -58,10 +64,10 @@ const CountdownList: React.FC<CountdownListProps> = ({ deadlines, onDelete }) =>
 
 	// TODO: fix logic
 	const getProgress = (countdown: Countdown) => {
-		if (!countdown.createdAt) return 100;
 		const now = new Date().getTime();
-		const distance = new Date(countdown.createdAt).getTime() - now;
-		return Math.floor((distance / countdown.date.getTime()) * 100);
+		const totalDistance = countdown.deadline.getTime() - countdown.startTime.getTime();
+		const currentDistance = countdown.deadline.getTime() - now;
+		return Math.floor((currentDistance / totalDistance) * 100);
 	};
 
 	return (
@@ -76,13 +82,13 @@ const CountdownList: React.FC<CountdownListProps> = ({ deadlines, onDelete }) =>
 							>
 								<h3 className="text-2xl font-bold">{countdown.name}</h3>
 								<div className="text-lg">
-									{formatCountdown(countdown.date.getTime())}
+									{formatCountdown(countdown.remainingTime.getTime())}
 								</div>
 							</div>
-							<button onClick={() => onDelete(countdown.name, countdown.date)}>Delete</button>
+							{/* TODO: fix logic */}
+							<button onClick={() => onDelete(countdown.name, countdown.remainingTime)}>Delete</button>
 						</div>
-						<div className={`border-4 rounded-full`} style={{ width: `${getProgress(countdown)}%` }} />
-						<div className={`border-b rounded-full`} />
+						<Progress value={getProgress(countdown)} />
 					</div>
 				))}
 		</div>
