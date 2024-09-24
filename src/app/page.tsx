@@ -12,6 +12,17 @@ type Countdown = {
 
 export default function Home() {
   const { data: deadlines } = api.deadline.getAll.useQuery();
+  const { mutate: createDeadline } = api.deadline.create.useMutation();
+  const { mutate: deleteDeadline } = api.deadline.delete.useMutation();
+
+  const handleCreate = (name: string, deadline: Date) => {
+    createDeadline({ name, deadline });
+  };
+
+  const handleDelete = (name: string, deadline: Date) => {
+    deleteDeadline({ name, deadline });
+  };
+
   const [showAddModal, setShowAddModal] = useState(false);
 
   const AddModal = () => {
@@ -23,7 +34,7 @@ export default function Home() {
         alert("Please fill out both fields");
         return;
       }
-      console.log(deadlineName, deadlineDate);
+      handleCreate(deadlineName, deadlineDate);
       setShowAddModal(false);
     };
 
@@ -49,9 +60,12 @@ export default function Home() {
           <button className="bg-white/5 text-white px-4 py-2 rounded-xl" onClick={() => { setShowAddModal(true); }}>Add Deadline</button>
         </div>
         {deadlines === undefined ? <PuffLoader color="white" loading={true} /> : null}
+        {/* TODO: check delete logic */}
         <CountdownList deadlines={
           deadlines?.map(({ deadline, name, createdAt }) => ({ date: new Date(deadline), name, createdAt }))
-        } /> {/* Pass deadlines directly */}
+        }
+          onDelete={handleDelete}
+        />
       </div>
       {showAddModal && <AddModal />}
     </main>

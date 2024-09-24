@@ -10,9 +10,10 @@ type Countdown = {
 
 interface CountdownListProps {
 	deadlines: Countdown[] | undefined; // Directly pass the deadlines data from useQuery
+	onDelete: (name: string, deadline: Date) => void;
 }
 
-const CountdownList: React.FC<CountdownListProps> = ({ deadlines }) => {
+const CountdownList: React.FC<CountdownListProps> = ({ deadlines, onDelete }) => {
 	const [countdowns, setCountdowns] = useState<Countdown[]>([]);
 	const modes = ["default", "pomodoro", "week", "month"];
 	const [modeIndex, setModeIndex] = useState(0);
@@ -55,6 +56,7 @@ const CountdownList: React.FC<CountdownListProps> = ({ deadlines }) => {
 		}
 	};
 
+	// TODO: fix logic
 	const getProgress = (countdown: Countdown) => {
 		if (!countdown.createdAt) return 100;
 		const now = new Date().getTime();
@@ -62,21 +64,22 @@ const CountdownList: React.FC<CountdownListProps> = ({ deadlines }) => {
 		return Math.floor((distance / countdown.date.getTime()) * 100);
 	};
 
-	// TODO: add progress bottom border
 	return (
 		<div className="flex flex-col w-96 rounded-xl bg-blue/10">
 			{countdowns.length > 0 &&
 				countdowns.map((countdown, index) => (
 					<div key={index + countdown.name}>
-						<div
-							className={`flex flex-col gap-4 p-4 hover:bg-white/20`}
-							onClick={() => setModeIndex((modeIndex + 1) % modes.length)}
-						>
-							<h3 className="text-2xl font-bold">{countdown.name}</h3>
-							<div className="text-lg">
-								{formatCountdown(countdown.date.getTime())}
+						<div className="flex flex-row gap-4 justify-between">
+							<div
+								className={`flex flex-col gap-4 p-4 hover:bg-white/20`}
+								onClick={() => setModeIndex((modeIndex + 1) % modes.length)}
+							>
+								<h3 className="text-2xl font-bold">{countdown.name}</h3>
+								<div className="text-lg">
+									{formatCountdown(countdown.date.getTime())}
+								</div>
 							</div>
-							{/* TODO: add progress bar */}
+							<button onClick={() => onDelete(countdown.name, countdown.date)}>Delete</button>
 						</div>
 						<div className={`border-4 rounded-full`} style={{ width: `${getProgress(countdown)}%` }} />
 						<div className={`border-b rounded-full`} />
