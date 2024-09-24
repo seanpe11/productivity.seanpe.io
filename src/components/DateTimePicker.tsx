@@ -11,7 +11,8 @@ interface DateTimePickerProps {
 }
 
 export default function DateTimePicker({ selectedDate, onDateChange }: DateTimePickerProps) {
-	const [time, setTime] = React.useState<string>("12:00");
+	const now = new Date();
+	const [time, setTime] = React.useState<string>(`${(now.getHours() % 12 || 12)}:${now.getMinutes().toString().padStart(2, '0')}`);
 
 	const handleDateChange = (selectedDate: Date | undefined) => {
 		if (selectedDate) onDateChange(selectedDate);
