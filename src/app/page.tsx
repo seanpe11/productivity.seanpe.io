@@ -12,22 +12,21 @@ export default function Home() {
   const { data: deadlines } = api.deadline.getAll.useQuery();
   const { mutate: createDeadline } = api.deadline.create.useMutation({
     onMutate: () => { setIsMutationLoading(true); setShowAddModal(false); },
-    onSuccess: () => {
-      queryClient.invalidateQueries();
+    onSuccess: async () => {
+      await queryClient.invalidateQueries();
       setIsMutationLoading(false);
     }
   });
   const { mutate: deleteDeadline } = api.deadline.delete.useMutation({
     onMutate: () => { setIsMutationLoading(true); setShowDeleteModal(false); },
-    onSuccess: () => {
-      queryClient.invalidateQueries();
+    onSuccess: async () => {
+      await queryClient.invalidateQueries();
       setIsMutationLoading(false);
     }
   });
 
   // TODO: add calendar event functionality
   const { data: calendarEvents } = api.deadline.getCalendarEvents.useQuery();
-  console.log(calendarEvents);
 
   const handleCreate = (name: string, deadline: Date) => {
     createDeadline({ name, deadline });

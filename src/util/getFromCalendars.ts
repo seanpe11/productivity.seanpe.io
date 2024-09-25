@@ -2,8 +2,8 @@ import ical from "node-ical";
 
 // TODO: understand why microsoft calendars are not working
 const getCalendars = async () => {
-	const gCal = await ical.async.fromURL(process.env.GOOGLE_CALENDAR_LINK || '');
-	const outlookCal = await ical.async.fromURL(process.env.OUTLOOK_CALENDAR_LINK || '');
+	const gCal = await ical.async.fromURL(process.env.GOOGLE_CALENDAR_LINK ?? '');
+	const outlookCal = await ical.async.fromURL(process.env.OUTLOOK_CALENDAR_LINK ?? '');
 
 	return [{ calendar: gCal, name: "GCal" }, { calendar: outlookCal, name: "UC Cal" }];
 };
@@ -31,7 +31,7 @@ export const syncToDb = async () => {
 	let events: { deadline: Date, name: string }[] = [];
 
 	for (const calendar of calendars) {
-		const parsedEvents = parseEvents(calendar.calendar as ical.CalendarResponse, calendar.name);
+		const parsedEvents = parseEvents(calendar.calendar, calendar.name);
 		events = events.concat(parsedEvents);
 	}
 }
@@ -42,7 +42,7 @@ export const getFromCalendars = async () => {
 	let events: { deadline: Date | null, name: string }[] = [];
 
 	for (const calendar of calendars) {
-		const parsedEvents = parseEvents(calendar.calendar as ical.CalendarResponse, calendar.name);
+		const parsedEvents = parseEvents(calendar.calendar, calendar.name);
 		events = events.concat(parsedEvents);
 	}
 
