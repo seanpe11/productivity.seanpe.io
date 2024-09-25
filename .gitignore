@@ -5,6 +5,10 @@
 /.pnp
 .pnp.js
 
+# Auto-generated PWA files
+/public/sw.js
+/public/workbox-*.js
+
 # testing
 /coverage
 
@@ -44,3 +48,4 @@ yarn-error.log*
 
 # idea files
 .idea
+certificates
