@@ -7,7 +7,7 @@ import {
 } from "~/server/api/trpc";
 import { eq, gt, asc } from "drizzle-orm/expressions";
 import { deadlines } from "~/server/db/schema";
-import { getFromCalendars } from "~/util/getFromCalendars";
+import { getFromCalendars, syncToDb } from "~/util/getFromCalendars";
 
 export const deadlineRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {

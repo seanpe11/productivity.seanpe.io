@@ -21,6 +21,12 @@ import { type AdapterAccount } from "next-auth/adapters";
  */
 export const createTable = pgTableCreator((name) => `productivity-seanpe-com_${name}`);
 
+export const events = createTable("events", {
+  id: integer("id").primaryKey(),
+  name: text("name"),
+  deadline: timestamp("deadline", { withTimezone: true }).notNull(),
+});
+
 export const deadlines = createTable("deadline", {
   name: varchar("name", { length: 255 }).notNull(),
   deadline: timestamp("deadline", { withTimezone: true }).notNull(),

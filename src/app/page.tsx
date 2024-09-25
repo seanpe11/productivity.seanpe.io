@@ -25,6 +25,7 @@ export default function Home() {
     }
   });
 
+  // TODO: add calendar event functionality
   const { data: calendarEvents } = api.deadline.getCalendarEvents.useQuery();
   console.log(calendarEvents);
 
