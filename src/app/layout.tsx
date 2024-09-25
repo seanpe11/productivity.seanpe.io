@@ -8,7 +8,6 @@ import { TRPCReactProvider } from "~/trpc/react";
 export const metadata: Metadata = {
   title: "Sean Pe's Productivity App",
   description: "Sean Pe's Productivity App",
-  manifest: "/manifest.json",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
   viewport:
     "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
