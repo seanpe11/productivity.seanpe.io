@@ -1,5 +1,6 @@
 import ical from "node-ical";
 
+// TODO: understand why microsoft calendars are not working
 const getCalendars = async () => {
 	const gCal = await ical.async.fromURL(process.env.GOOGLE_CALENDAR_LINK || '');
 	const outlookCal = await ical.async.fromURL(process.env.OUTLOOK_CALENDAR_LINK || '');
