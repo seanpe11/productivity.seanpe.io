@@ -25,6 +25,9 @@ export default function Home() {
     }
   });
 
+  const { data: calendarEvents } = api.deadline.getCalendarEvents.useQuery();
+  console.log(calendarEvents);
+
   const handleCreate = (name: string, deadline: Date) => {
     createDeadline({ name, deadline });
   };

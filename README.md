@@ -7,7 +7,7 @@ Basically the t3 stack, just adding PWA support so I can also use it offline and
 
 # TODO:
 - [x] Connect to my db
-- [ ] CRUD for deadlines
+- [x] CRUD for deadlines
 - [ ] Sync Calendars with deadlines
 - [ ] PWA configuration
 - [ ] Add a pomodoro timer

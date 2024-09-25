@@ -7,14 +7,19 @@ import {
 } from "~/server/api/trpc";
 import { eq, gt, asc } from "drizzle-orm/expressions";
 import { deadlines } from "~/server/db/schema";
+import { getFromCalendars } from "~/util/getFromCalendars";
 
 export const deadlineRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.db.query.deadlines.findMany({
-      // where: (deadlines) =>
-      //   eq(deadlines.completed, false) && gt(deadlines.deadline, new Date()),
-      // orderBy: asc(deadlines.deadline),
+      where: (deadlines) =>
+        eq(deadlines.completed, false) && gt(deadlines.deadline, new Date()),
+      orderBy: asc(deadlines.deadline),
     });
+  }),
+
+  getCalendarEvents: publicProcedure.query(({ ctx }) => {
+    return getFromCalendars();
   }),
 
   delete: publicProcedure
