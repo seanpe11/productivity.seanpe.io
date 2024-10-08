@@ -1,6 +1,7 @@
 "use client";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useState, useEffect, useRef } from "react";
+import CountdownCircle from "./ui/CountdownCircle";
 
 interface PomodoroTimerProps {
 	pomodoroState: 'pomodoro' | 'break' | 'longBreak';
@@ -81,6 +82,7 @@ export default function PomodoroTimer({ pomodoroState, onPomodoroStateChange }: 
 			<div className="font-bold text-[5rem]">
 				{remainingTime.getMinutes().toString().padStart(2, '0')}:{remainingTime.getSeconds().toString().padStart(2, '0')}
 			</div>
+			<CountdownCircle />
 			<button className="bg-white px-4 py-2 rounded-xl text-black" onClick={startTimer}>
 				{isTimerRunning ? "Pause" : "Start"}
 			</button>
