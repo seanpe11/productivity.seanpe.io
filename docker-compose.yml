@@ -1,24 +1,18 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  # Next.js application service
   app:
     build:
       context: .
-      dockerfile: Dockerfile # Make sure this points to your Dockerfile
-    container_name: productivity-seanpe-io
+      dockerfile: Dockerfile
     ports:
-      - "8104:3000"  # Map port 3000 inside the container to port 3000 on the host
+      - "3000:3000"
     environment:
       - NODE_ENV=production
-    volumes:
-      - .:/app  # Bind mount your app directory to the container for development (optional)
-    command: yarn dev  # Or 'yarn start' for production if already built
     networks:
-      - nextjs-network
+      - app-network
+    restart: unless-stopped
 
-# Define the network for the services
 networks:
-  nextjs-network:
+  app-network:
     driver: bridge
-
