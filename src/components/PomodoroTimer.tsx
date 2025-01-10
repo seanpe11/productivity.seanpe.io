@@ -82,7 +82,7 @@ export default function PomodoroTimer({ pomodoroState, onPomodoroStateChange }: 
 			<div className="font-bold text-[5rem]">
 				{remainingTime.getMinutes().toString().padStart(2, '0')}:{remainingTime.getSeconds().toString().padStart(2, '0')}
 			</div>
-			<CountdownCircle />
+			<CountdownCircle timeRemaining={remainingTime.getTime()} timerState={pomodoroState} onTimeRemainingChange={() => { console.log('change') }} onTimerStateChange={() => { console.log('change') }} />
 			<button className="bg-white px-4 py-2 rounded-xl text-black" onClick={startTimer}>
 				{isTimerRunning ? "Pause" : "Start"}
 			</button>

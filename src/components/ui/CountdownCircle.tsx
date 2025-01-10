@@ -15,7 +15,7 @@ interface CountdownProps {
 }
 
 // Define the Countdown component using TypeScript
-const Countdown = ({ timeRemaining, timerState, onTimeRemainingChange, onTimerStateChange }: CountdownProps) => {
+const Countdown = ({ timeRemaining, timerState }: CountdownProps) => {
   // Constants for SVG dimensions
   const d = 15;
   const o = -0.5 * d;
